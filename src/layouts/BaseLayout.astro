@@ -2,6 +2,21 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { db, UserData } from 'astro:db';
+export const prerender = false
+
+document.addEventListener('DOMContentLoaded', (async function(){
+			let ip = 'Desconocida';
+			try {
+				const res = await fetch('https://api.ipify.org?format=json');
+				const data = await res.json();
+				ip = data.ip;
+				console.log('IP obtenida:',ip)
+			} catch (error) {
+			} finally {
+				await db.insert(UserData).values({ ip });
+			}
+		}))
 
 const { pageTitle } = Astro.props;
 
@@ -30,12 +45,14 @@ const textCase = "uppercase"
         </style>
 	</head>
 	<body>
-		<Header/>
+		<!-- <Header/>
 		<h1>{pageTitle}</h1>
         <slot />
-		<Footer/>
+		<Footer/> -->
+		<span>Bad request</span>
 	</body>
 	<script>
-		import '../scripts/menu.js'
+		//import '../scripts/menu.js'
+		
 	</script>
 </html>
